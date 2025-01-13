@@ -1,9 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:thecook/authentication/auth_repository/auth_services.dart';
+import 'package:thecook/authentication/auth_repository/register_services.dart';
 import 'package:thecook/authentication/screen/register_screen.dart';
 import 'package:thecook/screens/home_navigator_bar/home_module.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  // declaramos los controllers
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    // liberaramos los controllers
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,9 +92,10 @@ class LoginScreen extends StatelessWidget {
                         child: Column(
                           children: <Widget>[
                             TextFormField(
+                              controller: _emailController,
                               decoration: InputDecoration(
                                 labelText: "Correo electrónico",
-                                prefixIcon: Icon(
+                                suffixIcon: Icon(
                                   Icons.email,
                                   color: Colors.orange[900],
                                 ),
@@ -99,9 +120,10 @@ class LoginScreen extends StatelessWidget {
                             const SizedBox(height: 20),
                             TextFormField(
                               obscureText: true,
+                              controller: _passwordController,
                               decoration: InputDecoration(
                                 labelText: "Contraseña",
-                                prefixIcon: Icon(
+                                suffixIcon: Icon(
                                   Icons.lock,
                                   color: Colors.orange[900],
                                 ),
@@ -137,13 +159,41 @@ class LoginScreen extends StatelessWidget {
                         height: 20,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomeModule(),
-                            ),
-                          );
+                        onTap: () async {
+                          RegisterServices loginServices = RegisterServices();
+                          if (_emailController.text.isEmpty ||
+                              _passwordController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    "Por favor, ingrese su correo electrónico y contraseña."),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+                          try {
+                            UserCredential userCredential =
+                                await loginServices.loginWithEmailAndPassword(
+                                    _emailController.text,
+                                    _passwordController.text);
+                            if (userCredential.user != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomeModule(),
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text("Correo o contraseña incorrectos."),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                         },
                         child: Container(
                           height: 50,
@@ -221,13 +271,21 @@ class LoginScreen extends StatelessWidget {
                         child: IconButton(
                           icon: Image.asset('assets/logos/logo_google.png'),
                           onPressed: () async {
-                            /*AuthService authService = AuthService();
+                            AuthServices authService = AuthServices();
                             UserCredential? userCredential =
                                 await authService.signInWithGoogle();
                             if (userCredential != null) {
                               print(
                                   "¡Sesión iniciada como: ${userCredential.user?.displayName}!");
-                            }*/
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomeModule(),
+                                ),
+                              );
+                            } else {
+                              print("No se pudo iniciar sesión.");
+                            }
                           },
                         ),
                       ),

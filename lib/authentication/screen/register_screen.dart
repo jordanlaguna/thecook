@@ -1,7 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:thecook/authentication/auth_repository/register_services.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    // Liberaramos los controllers
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +92,10 @@ class RegisterScreen extends StatelessWidget {
                           children: <Widget>[
                             // Campo de Nombre
                             TextFormField(
+                              controller: _nameController,
                               decoration: InputDecoration(
-                                labelText: "Nombre",
-                                prefixIcon: Icon(
+                                labelText: "Nombre completo",
+                                suffixIcon: Icon(
                                   Icons.person,
                                   color: Colors.orange[900],
                                 ),
@@ -97,10 +120,11 @@ class RegisterScreen extends StatelessWidget {
                             const SizedBox(height: 20),
                             // Campo de Apellidos
                             TextFormField(
+                              controller: _emailController,
                               decoration: InputDecoration(
-                                labelText: "Apellidos",
-                                prefixIcon: Icon(
-                                  Icons.person_outline,
+                                labelText: "Correo electrónico",
+                                suffixIcon: Icon(
+                                  Icons.email,
                                   color: Colors.orange[900],
                                 ),
                                 labelStyle:
@@ -124,10 +148,12 @@ class RegisterScreen extends StatelessWidget {
                             const SizedBox(height: 20),
                             // Campo de Correo electrónico
                             TextFormField(
+                              controller: _passwordController,
+                              obscureText: true,
                               decoration: InputDecoration(
-                                labelText: "Correo electrónico",
-                                prefixIcon: Icon(
-                                  Icons.email,
+                                labelText: "Contraseña",
+                                suffixIcon: Icon(
+                                  Icons.lock,
                                   color: Colors.orange[900],
                                 ),
                                 labelStyle:
@@ -151,10 +177,11 @@ class RegisterScreen extends StatelessWidget {
                             const SizedBox(height: 20),
                             // Campo de Contraseña
                             TextFormField(
+                              controller: _confirmPasswordController,
                               obscureText: true,
                               decoration: InputDecoration(
-                                labelText: "Contraseña",
-                                prefixIcon: Icon(
+                                labelText: "Confirmar contraseña",
+                                suffixIcon: Icon(
                                   Icons.lock,
                                   color: Colors.orange[900],
                                 ),
@@ -184,7 +211,46 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // Aquí puedes añadir la lógica para registrar al usuario
+                          RegisterServices registerServices =
+                              RegisterServices();
+                          if (_nameController.text.isEmpty ||
+                              _emailController.text.isEmpty ||
+                              _passwordController.text.isEmpty ||
+                              _confirmPasswordController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text("Todos los campos son obligatorios."),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+                          try {
+                            if (_passwordController.text ==
+                                _confirmPasswordController.text) {
+                              registerServices.registerUser(
+                                  _nameController.text,
+                                  _emailController.text,
+                                  _passwordController.text);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text("Las contraseñas no coinciden."),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text("Error al guardar la información."),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                           print("Usuario registrado");
                         },
                         child: Container(
