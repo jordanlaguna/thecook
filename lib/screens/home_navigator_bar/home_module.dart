@@ -1,8 +1,10 @@
+// ignore_for_file: use_super_parameters
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:thecook/screens/bottom_navigator_bar/favorite_page/favorite.dart';
 import 'package:thecook/screens/bottom_navigator_bar/home_page/home.dart';
-import 'package:thecook/screens/bottom_navigator_bar/profile_page/profile.dart';
+import 'package:thecook/screens/bottom_navigator_bar/profile_page/screen/profile.dart';
 import 'package:thecook/screens/bottom_navigator_bar/settings_page/settings.dart';
 import 'package:thecook/screens/screen_navbar/navbar/navbar.dart';
 
@@ -21,8 +23,8 @@ class _ModuleMainState extends State<HomeModule> {
   int index = 0;
   final List<Widget> screens = [
     const HomePage(),
-    const ProfilePage(),
     const FavoritePage(),
+    const ProfilePage(),
     const SettingsPage(),
   ];
 
@@ -40,11 +42,11 @@ class _ModuleMainState extends State<HomeModule> {
         size: 35,
       ),
       const Icon(
-        Icons.account_circle,
+        Icons.favorite,
         color: Colors.white,
         size: 35,
       ),
-      const Icon(Icons.favorite, color: Colors.white, size: 35),
+      const Icon(Icons.account_circle, color: Colors.white, size: 35),
       const Icon(Icons.settings, color: Colors.white, size: 35),
     ];
     return MaterialApp(

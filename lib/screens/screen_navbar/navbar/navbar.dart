@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:thecook/authentication/screen/login_screen.dart';
 import 'package:thecook/screens/screen_navbar/slider_drawer/archive/archive.dart';
 import 'package:thecook/screens/screen_navbar/slider_drawer/help/help.dart';
 import 'package:thecook/screens/screen_navbar/slider_drawer/profile/screen/profile.dart';
-import 'package:thecook/screens/screen_navbar/slider_drawer/settings/settings.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -83,20 +83,28 @@ class _NavBarState extends State<NavBar> {
                 ),
                 buildListTile(context, Icons.account_circle, 'Perfil',
                     const ProfileDrawer()),
-                buildListTile(context, Icons.message_rounded, 'Mensajes',
-                    const ArchivePage()),
+                buildListTile(context, Icons.notification_add_rounded,
+                    'Notificaciones', const ArchivePage()),
                 buildListTile(context, Icons.work_history_rounded, 'Archivados',
                     const HelpPage()),
                 const Divider(
                   height: 30,
                   color: Color.fromARGB(255, 0, 0, 0),
                 ),
-                buildListTile(context, Icons.help_rounded, 'Ayuda',
-                    const ConfigurePage()),
                 buildListTile(context, Icons.logout_rounded, 'Salir', null,
-                    onTap: () {
-                  FirebaseAuth.instance.signOut();
-                  Navigator.of(context).pop();
+                    onTap: () async {
+                  try {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                      (route) => false,
+                    );
+                  } catch (e) {
+                    print('Error al cerrar sesión: $e');
+                  }
                 }),
               ],
             ),

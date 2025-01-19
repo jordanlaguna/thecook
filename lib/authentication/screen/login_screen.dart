@@ -41,9 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const SizedBox(
-                height: 80,
-              ),
+              const SizedBox(height: 70),
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
@@ -53,11 +51,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       "Inicio de Sesión",
                       style: TextStyle(color: Colors.white, fontSize: 32),
                     ),
-                    SizedBox(
-                      height: 10,
+                    SizedBox(height: 10),
+                    Text(
+                      "Bienvenido de nuevo",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
-                    Text("Bienvenido de nuevo",
-                        style: TextStyle(color: Colors.white, fontSize: 18)),
                   ],
                 ),
               ),
@@ -73,9 +71,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: <Widget>[
-                      const SizedBox(
-                        height: 60,
+                      const SizedBox(height: 5),
+                      Center(
+                        child: Image.asset(
+                          'assets/logos/Logo.png',
+                          height: 120,
+                        ),
                       ),
+                      const SizedBox(height: 10),
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -148,16 +151,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      const SizedBox(height: 20),
                       const Text(
                         "¿Olvidaste tu contraseña?",
                         style: TextStyle(color: Colors.grey),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () async {
                           RegisterServices loginServices = RegisterServices();
@@ -212,13 +211,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      const Text(
-                        "- O -",
-                        style: TextStyle(color: Colors.grey),
-                      ),
+                      const SizedBox(height: 5),
+                      const Text("- O -", style: TextStyle(color: Colors.grey)),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -245,9 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 15,
-                      ),
+                      const SizedBox(height: 15),
                       const Text(
                         "Continuar con Google",
                         style: TextStyle(color: Colors.grey),
@@ -275,16 +267,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             UserCredential? userCredential =
                                 await authService.signInWithGoogle();
                             if (userCredential != null) {
-                              print(
-                                  "¡Sesión iniciada como: ${userCredential.user?.displayName}!");
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => HomeModule(),
                                 ),
                               );
-                            } else {
-                              print("No se pudo iniciar sesión.");
                             }
                           },
                         ),

@@ -1,9 +1,10 @@
+// ignore_for_file: use_super_parameters, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'dart:io';
-
 import 'package:thecook/screens/screen_navbar/slider_drawer/profile/controller/profile_controller.dart';
 import 'package:thecook/screens/screen_navbar/slider_drawer/profile/services/image_services.dart';
 
@@ -59,7 +60,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
         context: context,
         type: QuickAlertType.info,
         text: 'No seleccionaste ninguna imagen.',
-        autoCloseDuration: const Duration(seconds: 2),
+        autoCloseDuration: const Duration(seconds: 3),
         showConfirmBtn: false,
       );
     }
@@ -99,7 +100,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                       context: context,
                       type: QuickAlertType.success,
                       text: '¡Imagen de perfil actualizada!',
-                      autoCloseDuration: const Duration(seconds: 2),
+                      autoCloseDuration: const Duration(seconds: 3),
                       showConfirmBtn: false,
                     );
                   }
@@ -119,7 +120,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                   context: context,
                   type: QuickAlertType.error,
                   text: 'Por favor completa todos los campos',
-                  autoCloseDuration: const Duration(seconds: 2),
+                  autoCloseDuration: const Duration(seconds: 3),
                   showConfirmBtn: false,
                 );
               }
@@ -147,9 +148,13 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                           radius: 60,
                           backgroundImage: FileImage(_imageFile!),
                         )
-                      : const CircleAvatar(
+                      : CircleAvatar(
                           radius: 60,
-                          child: Icon(Icons.person, size: 50),
+                          child: Icon(
+                            Icons.person,
+                            size: 50,
+                            color: Colors.orange[900],
+                          ),
                         ),
               const SizedBox(height: 15),
               _buildTextField(_identificationController, 'Ingrese su cédula',
