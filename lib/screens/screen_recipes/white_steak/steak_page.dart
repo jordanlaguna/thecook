@@ -11,9 +11,8 @@ class SteakPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'Pollo en salsa blanca',
-        calificacion: 4.5,
         imageUrl: 'assets/chickenRep/Pollo-en-Salsa-Blanca.jpg',
-        ingredientes: [
+        ingredients: [
           'Para el pollo:',
           '2 pechugas de pollo',
           'Sal y pimienta al gusto',
@@ -28,9 +27,8 @@ class SteakPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'Pollo frito en salsa roja',
-        calificacion: 4.9,
         imageUrl: 'assets/chickenRep/pollo-frito-con-tomate.jpg',
-        ingredientes: [
+        ingredients: [
           'Para el pollo frito:',
           '2 muslos de pollo',
           '1 taza de harina de trigo',
@@ -49,9 +47,8 @@ class SteakPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'Alitas fritas en salsa buffalo',
-        calificacion: 4.8,
         imageUrl: 'assets/chickenRep/alitas.jpg',
-        ingredientes: [
+        ingredients: [
           'Para las alitas:',
           '10 alitas de pollo',
           '1 taza de harina de trigo',
@@ -66,9 +63,8 @@ class SteakPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'Cordon bleu',
-        calificacion: 4.7,
         imageUrl: 'assets/chickenRep/Cordon-Bleu.jpg',
-        ingredientes: [
+        ingredients: [
           'Para el cordon bleu:',
           '2 pechugas de pollo',
           '2 rebanadas de jamón',
@@ -87,9 +83,8 @@ class SteakPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'Pechuga en salsa cremosa',
-        calificacion: 4.6,
         imageUrl: 'assets/chickenRep/pechuga.jpg',
-        ingredientes: [
+        ingredients: [
           'Para la pechuga:',
           '2 pechugas de pollo',
           'Sal y pimienta al gusto',

@@ -2,7 +2,6 @@
 
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class ImageService {
@@ -10,22 +9,21 @@ class ImageService {
   static final FirebaseFirestore _firebaseFirestore =
       FirebaseFirestore.instance;
 
-  static Future<String?> uploadImage(File image) async {
-    final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
-
+  static Future<String?> uploadImage(File image, String recipeId) async {
     try {
       final String fileName = image.path.split('/').last;
 
-      Reference ref = _storage.ref().child("pictures").child(fileName);
+      // save the image in Firebase Storage
+      Reference ref = _storage.ref().child("recipe").child(fileName);
       final UploadTask uploadTask = ref.putFile(image);
       final TaskSnapshot snapshot = await uploadTask.whenComplete(() => true);
 
-      // obtain the URL of the image
+      // get url from the image
       final String url = await snapshot.ref.getDownloadURL();
 
-      // save the URL in Firestore
-      await _firebaseFirestore.collection("user").doc(currentUserId).update({
-        "photoURL": url,
+      // save the url in Firestore in the recipe document
+      await _firebaseFirestore.collection("recipes").doc(recipeId).update({
+        "imageURL": url,
       });
 
       return url;

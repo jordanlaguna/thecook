@@ -29,7 +29,7 @@ class RecipeDetailsModal extends StatelessWidget {
             const SizedBox(height: 8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: recipe.ingredientes
+              children: recipe.ingredients
                   .map((ingrediente) => Text(
                         '- $ingrediente',
                         style: const TextStyle(fontSize: 16),

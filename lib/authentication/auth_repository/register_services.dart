@@ -15,14 +15,13 @@ class RegisterServices {
         email: email,
         password: password,
       );
-      // estanciamos la clase
       UserModel user = UserModel(
         uid: userCredential.user!.uid,
         name: name,
         email: email,
         password: password,
       );
-      //guardamos los datos en firestore
+      // save user in firestore
       await _firestore.collection('user').doc(user.uid).set(user.toMap());
     } catch (e) {
       print(e);

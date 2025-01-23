@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
         'route': SteakRedPage(),
       },
       {
-        'name': 'Pescados y Mariscos',
+        'name': 'Mariscos',
         'total': 8,
         'image': 'assets/home_page/fish.jpg',
         'route': FishPage(),
@@ -47,7 +47,13 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: const Text('Recetas de Cocina'),
+          child: const Text(
+            'Recetas de Cocina',
+            style: TextStyle(
+                fontSize: 24,
+                fontFamily: 'Monserrat',
+                fontWeight: FontWeight.bold),
+          ),
         ),
       ),
       body: ListView.builder(

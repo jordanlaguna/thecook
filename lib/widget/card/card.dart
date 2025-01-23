@@ -39,8 +39,8 @@ class _RecipeCardState extends State<RecipeCard> {
                       fontWeight: FontWeight.bold,
                     ),
                     overflow: TextOverflow
-                        .ellipsis, // Agrega "..." si el texto es muy largo
-                    maxLines: 1, // Limita el texto a una línea
+                        .ellipsis, // Agregamos "..." si el texto es muy largo
+                    maxLines: 1,
                   ),
                 ),
                 // Íconos de favorito y liked más juntos
@@ -103,13 +103,6 @@ class _RecipeCardState extends State<RecipeCard> {
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              'Calificación: ${widget.recipe.calificacion}',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[700],
-              ),
-            ),
             GestureDetector(
               onTap: () {
                 showModalBottomSheet(

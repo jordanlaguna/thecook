@@ -11,9 +11,8 @@ class SteakRedPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'Churrasco con chimichurri',
-        calificacion: 4.5,
         imageUrl: 'assets/steakRec/Churrasco-Chimichurri.jpg',
-        ingredientes: [
+        ingredients: [
           'Para el churrasco:',
           '1 churrasco de res',
           'Sal y pimienta al gusto',
@@ -35,9 +34,8 @@ class SteakRedPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'Costilla de res asada',
-        calificacion: 4.9,
         imageUrl: 'assets/steakRec/costillas.jpg',
-        ingredientes: [
+        ingredients: [
           'Para la costilla:',
           '1 costilla de res',
           'Sal y pimienta al gusto',
@@ -61,9 +59,8 @@ class SteakRedPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'Lomo relleno',
-        calificacion: 4.8,
         imageUrl: 'assets/steakRec/lomo-relleno.jpg',
-        ingredientes: [
+        ingredients: [
           'Para el lomo:',
           '1 lomo de res',
           'Sal y pimienta al gusto',
@@ -82,9 +79,8 @@ class SteakRedPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'New York strip steak',
-        calificacion: 4.7,
         imageUrl: 'assets/steakRec/new-york-strip-steak-recipe.jpg',
-        ingredientes: [
+        ingredients: [
           'Para el New York:',
           '1 New York strip steak',
           'Sal y pimienta al gusto',
@@ -104,9 +100,8 @@ class SteakRedPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'Tomahawk steak',
-        calificacion: 4.6,
         imageUrl: 'assets/steakRec/Tomahawk-Steak.jpg',
-        ingredientes: [
+        ingredients: [
           'Para el Tomahawk:',
           '1 Tomahawk steak',
           'Sal y pimienta al gusto',

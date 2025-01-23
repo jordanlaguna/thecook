@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:thecook/screens/screen_navbar/slider_drawer/profile/services/image_services.dart';
 
 class ProfileController {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
@@ -97,50 +96,6 @@ class ProfileController {
         autoCloseDuration: const Duration(seconds: 2),
         showConfirmBtn: false,
       );
-    }
-  }
-
-  Future<void> uploadProfileImage(BuildContext context) async {
-    if (imageUpload != null) {
-      try {
-        // Subimos la imagen a Firebase Storage
-        String? imageUrl = await ImageService.uploadImage(imageUpload!);
-
-        if (imageUrl != null) {
-          String uid = _auth.currentUser!.uid;
-
-          // Guardamos la URL de la imagen en Firestore
-          await _firebaseFirestore.collection('user').doc(uid).update({
-            'photoURL': imageUrl,
-          });
-
-          QuickAlert.show(
-            context: context,
-            type: QuickAlertType.success,
-            text: '¡Foto de perfil actualizada!',
-            autoCloseDuration: const Duration(seconds: 2),
-            showConfirmBtn: false,
-          );
-
-          imageUpload = null;
-        } else {
-          QuickAlert.show(
-            context: context,
-            type: QuickAlertType.error,
-            text: 'Error al subir la imagen.',
-            autoCloseDuration: const Duration(seconds: 2),
-            showConfirmBtn: false,
-          );
-        }
-      } catch (e) {
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: 'Error al actualizar la foto de perfil.',
-          autoCloseDuration: const Duration(seconds: 2),
-          showConfirmBtn: false,
-        );
-      }
     }
   }
 }

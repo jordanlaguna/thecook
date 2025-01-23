@@ -21,7 +21,14 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Perfil'),
+          child: Text(
+            'Perfil',
+            style: TextStyle(
+              fontSize: 24,
+              fontFamily: 'Monserrat',
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
       body: Center(

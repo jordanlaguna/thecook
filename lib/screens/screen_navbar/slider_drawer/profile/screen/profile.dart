@@ -99,7 +99,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                     QuickAlert.show(
                       context: context,
                       type: QuickAlertType.success,
-                      text: '¡Imagen de perfil actualizada!',
+                      text: 'Foto de perfil actualizada!',
                       autoCloseDuration: const Duration(seconds: 3),
                       showConfirmBtn: false,
                     );

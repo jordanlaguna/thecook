@@ -11,9 +11,8 @@ class FishPage extends StatelessWidget {
       Recipe(
         author: 'Chef Juan',
         name: 'Filete de pescado',
-        calificacion: 4.5,
         imageUrl: 'assets/fishRec/filet.jpg',
-        ingredientes: [
+        ingredients: [
           'Para el Filet:',
           '1 filete de pescado',
           'Sal y pimienta al gusto',
@@ -28,9 +27,8 @@ class FishPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'Camarones salsa de coco',
-        calificacion: 4.9,
         imageUrl: 'assets/fishRec/camaron.jpg',
-        ingredientes: [
+        ingredients: [
           'Para los camarones:',
           '10 camarones',
           '1 taza de harina de trigo',
@@ -48,9 +46,8 @@ class FishPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'Mariscada con pasta',
-        calificacion: 4.8,
         imageUrl: 'assets/fishRec/mariscada.jpg',
-        ingredientes: [
+        ingredients: [
           'Para la mariscada:',
           '1 bolsa de mariscos',
           '1 taza de vino blanco',
@@ -66,9 +63,8 @@ class FishPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'Pasta con camarones',
-        calificacion: 4.7,
         imageUrl: 'assets/fishRec/pasta_con_camarones.jpg',
-        ingredientes: [
+        ingredients: [
           'Para los camarones:',
           '10 camarones',
           '1 mantequilla',
@@ -84,9 +80,8 @@ class FishPage extends StatelessWidget {
       Recipe(
         author: 'Jordan Laguna',
         name: 'Pulpo con plumas',
-        calificacion: 4.6,
         imageUrl: 'assets/fishRec/pulpo.jpg',
-        ingredientes: [
+        ingredients: [
           'Para el pulpo:',
           '1 pulpo',
           'Asustar con agua hirviendo el pulpo 3 veces',
@@ -182,7 +177,7 @@ class RecipeDetailsModal extends StatelessWidget {
             const SizedBox(height: 8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: recipe.ingredientes
+              children: recipe.ingredients
                   .map((ingrediente) => Text(
                         '- $ingrediente',
                         style: const TextStyle(fontSize: 16),

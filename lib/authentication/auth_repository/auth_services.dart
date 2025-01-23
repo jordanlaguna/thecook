@@ -1,15 +1,18 @@
 // ignore_for_file: avoid_print
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:thecook/model/user.dart';
 
 class AuthServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      // Verificar si el usuario ya inició sesión
+      // verify if the user is already signed in
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) {
@@ -25,9 +28,26 @@ class AuthServices {
         idToken: googleAuth.idToken,
       );
 
-      // Iniciar sesión con Firebase
+      // signIn with credential
       UserCredential userCredential =
           await _auth.signInWithCredential(credential);
+
+      UserModel user = UserModel(
+        uid: userCredential.user?.uid ?? '',
+        name: googleUser.displayName ?? 'Nombre no disponible',
+        email: googleUser.email,
+      );
+
+      // verify if the user exists in Firestore
+      final userDoc = _firestore.collection('user').doc(user.uid);
+      final docSnapshot = await userDoc.get();
+
+      if (!docSnapshot.exists) {
+        await userDoc.set(user.toMap());
+        print("Usuario guardado en Firestore.");
+      } else {
+        print("El usuario ya existe en Firestore.");
+      }
 
       print("Inicio de sesión exitoso: ${userCredential.user?.displayName}");
       return userCredential;
