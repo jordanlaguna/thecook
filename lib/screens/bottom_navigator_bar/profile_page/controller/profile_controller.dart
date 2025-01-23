@@ -7,7 +7,7 @@ class ProfileController {
 
   Future<String?> getUserPhotoURL(String uid) async {
     try {
-      // Obtener foto de Firestore si existe
+      // extraction of the user's photo
       DocumentSnapshot userDoc =
           await _firebaseFirestore.collection('user').doc(uid).get();
       if (userDoc.exists && userDoc.data() != null) {
@@ -17,7 +17,7 @@ class ProfileController {
         }
       }
 
-      // Foto de Firebase Authentication como fallback
+      // the user's photo is not in Firestore, so we get it from Firebase Authentication
       User? user = _auth.currentUser;
       if (user != null && user.photoURL != null) {
         return user.photoURL;
@@ -30,7 +30,7 @@ class ProfileController {
 
   Future<Map<String, dynamic>> getUserData(String uid) async {
     try {
-      // Obtener datos de Firebase Authentication
+      // extraction of the user's data from Firebase Authentication
       User? user = _auth.currentUser;
       Map<String, dynamic> authData = {
         'name': user?.displayName ?? 'Nombre no disponible',

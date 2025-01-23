@@ -31,11 +31,16 @@ class _RecipeCardState extends State<RecipeCard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Título de la receta
-                Text(
-                  widget.recipe.name,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    widget.recipe.name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow
+                        .ellipsis, // Agrega "..." si el texto es muy largo
+                    maxLines: 1, // Limita el texto a una línea
                   ),
                 ),
                 // Íconos de favorito y liked más juntos
