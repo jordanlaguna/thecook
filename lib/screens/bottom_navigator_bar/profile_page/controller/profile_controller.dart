@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -8,10 +6,10 @@ class ProfileController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<String?> getUserPhotoURL(String uid) async {
-    DocumentSnapshot userDoc =
-        await _firebaseFirestore.collection('user').doc(uid).get();
     try {
-      // validamos que el documento exista y que tenga datos
+      // Obtener foto de Firestore si existe
+      DocumentSnapshot userDoc =
+          await _firebaseFirestore.collection('user').doc(uid).get();
       if (userDoc.exists && userDoc.data() != null) {
         Map<String, dynamic> userData = userDoc.data()! as Map<String, dynamic>;
         if (userData['photoURL'] != null) {
@@ -19,27 +17,43 @@ class ProfileController {
         }
       }
 
-      // revisamos si el usuario tiene una foto de perfil en google auth
+      // Foto de Firebase Authentication como fallback
       User? user = _auth.currentUser;
       if (user != null && user.photoURL != null) {
         return user.photoURL;
       }
     } catch (e) {
-      print('Error obteniendo datos del usuario: $e');
+      print('Error obteniendo la foto de perfil: $e');
     }
     return null;
   }
 
-  // extraemos el nombre del usuario de la base de datos
-  Future<Map<String, dynamic>?> getUserData(String? uid) async {
-    if (uid == null) return null;
+  Future<Map<String, dynamic>> getUserData(String uid) async {
     try {
+      // Obtener datos de Firebase Authentication
+      User? user = _auth.currentUser;
+      Map<String, dynamic> authData = {
+        'name': user?.displayName ?? 'Nombre no disponible',
+        'email': user?.email ?? 'Correo no disponible',
+      };
+
+      // Obtener datos adicionales de Firestore
       DocumentSnapshot<Map<String, dynamic>> userData =
           await _firebaseFirestore.collection('user').doc(uid).get();
-      return userData.data();
+      if (userData.exists && userData.data() != null) {
+        return {
+          ...authData,
+          ...userData.data()!,
+        };
+      }
+
+      return authData;
     } catch (e) {
-      print('Error obteniendo datos del usuario: $e');
-      return null;
+      print('Error obteniendo los datos del usuario: $e');
+      return {
+        'name': 'Nombre no disponible',
+        'email': 'Correo no disponible',
+      };
     }
   }
 }

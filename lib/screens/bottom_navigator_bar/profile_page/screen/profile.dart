@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:thecook/screens/bottom_navigator_bar/profile_page/controller/profile_controller.dart';
-import 'package:thecook/widget/add_recipes/add_recipes.dart';
+import 'package:thecook/screens/add_recipes/screen/add_recipes.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -12,11 +11,13 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final ProfileController _profileController = ProfileController();
+  final User? _user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
+    final String uid = _user?.uid ?? '';
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -45,20 +46,18 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   child: ClipOval(
                     child: FutureBuilder<String?>(
-                      future: ProfileController().getUserPhotoURL(
-                        FirebaseAuth.instance.currentUser!.uid,
-                      ),
-                      builder: (context, snapShot) {
-                        if (snapShot.connectionState ==
+                      future: _profileController.getUserPhotoURL(uid),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         }
-                        if (snapShot.hasError) {
+                        if (snapshot.hasError) {
                           return const Icon(Icons.error);
                         } else {
-                          if (snapShot.hasData && snapShot.data!.isNotEmpty) {
+                          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                             return Image.network(
-                              snapShot.data!,
+                              snapshot.data!,
                               fit: BoxFit.cover,
                               width: 100,
                               height: 100,
@@ -73,43 +72,49 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               const SizedBox(height: 20),
-              // Nombre del usuario
-              FutureBuilder<DocumentSnapshot>(
-                future: _firebaseFirestore
-                    .collection('user')
-                    .doc(_auth.currentUser!.uid)
-                    .get(),
+              // Nombre y correo del usuario
+              FutureBuilder<Map<String, dynamic>>(
+                future: _profileController.getUserData(uid),
                 builder: (BuildContext context,
-                    AsyncSnapshot<DocumentSnapshot> snapShot) {
-                  if (snapShot.connectionState == ConnectionState.waiting) {
+                    AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
-                  if (snapShot.hasError) {
+                  if (snapshot.hasError) {
                     return const Text("Error al cargar los datos");
                   }
-                  if (snapShot.hasData && snapShot.data!.exists) {
-                    Map<String, dynamic> userData =
-                        snapShot.data!.data() as Map<String, dynamic>;
-                    return Text(
-                      userData['name'] ?? 'Nombre no disponible',
-                      style: const TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  if (snapshot.hasData && snapshot.data != null) {
+                    Map<String, dynamic> userData = snapshot.data!;
+                    String userName = userData['name'] ??
+                        _user?.displayName ??
+                        'Nombre no disponible';
+
+                    return Column(
+                      children: [
+                        Text(
+                          userName,
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     );
                   } else {
                     return const Text("Usuario no encontrado");
                   }
                 },
               ),
+
               const SizedBox(height: 40),
               // Botón para agregar receta
               ElevatedButton.icon(
                 onPressed: () {
-                  // Acción al presionar el botón
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AddRecipePage()),
+                    MaterialPageRoute(
+                      builder: (context) => const AddRecipePage(),
+                    ),
                   );
                 },
                 icon: const Icon(Icons.add),
@@ -127,5 +132,3 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
-
-// Página para agregar recetas (puedes personalizarla)

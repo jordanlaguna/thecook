@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:thecook/model/recipes_list.dart';
 import 'package:thecook/widget/modal_recipes/modal.dart';
@@ -32,6 +30,7 @@ class _RecipeCardState extends State<RecipeCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Título de la receta
                 Text(
                   widget.recipe.name,
                   style: const TextStyle(
@@ -39,20 +38,54 @@ class _RecipeCardState extends State<RecipeCard> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                IconButton(
-                  icon: Icon(
-                    widget.recipe.isFavorite
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    color: widget.recipe.isFavorite ? Colors.red : Colors.grey,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      widget.recipe.isFavorite = !widget.recipe.isFavorite;
-                    });
-                  },
+                // Íconos de favorito y liked más juntos
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      icon: Icon(
+                        widget.recipe.isFavorite
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color:
+                            widget.recipe.isFavorite ? Colors.red : Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          widget.recipe.isFavorite = !widget.recipe.isFavorite;
+                        });
+                      },
+                    ),
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      icon: Icon(
+                        widget.recipe.liked
+                            ? Icons.thumb_up
+                            : Icons.thumb_up_alt_outlined,
+                        color: Colors.blue,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          widget.recipe.liked = !widget.recipe.liked;
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ],
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Por: ${widget.recipe.author}",
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+              ),
             ),
             const SizedBox(height: 8),
             ClipRRect(

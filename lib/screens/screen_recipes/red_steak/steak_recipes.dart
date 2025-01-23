@@ -9,6 +9,7 @@ class SteakRedPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Recipe> recipes = [
       Recipe(
+        author: 'Jordan Laguna',
         name: 'Churrasco con chimichurri',
         calificacion: 4.5,
         imageUrl: 'assets/steakRec/Churrasco-Chimichurri.jpg',
@@ -32,6 +33,7 @@ class SteakRedPage extends StatelessWidget {
         isFavorite: false,
       ),
       Recipe(
+        author: 'Jordan Laguna',
         name: 'Costilla de res asada',
         calificacion: 4.9,
         imageUrl: 'assets/steakRec/costillas.jpg',
@@ -57,6 +59,7 @@ class SteakRedPage extends StatelessWidget {
         isFavorite: false,
       ),
       Recipe(
+        author: 'Jordan Laguna',
         name: 'Lomo relleno',
         calificacion: 4.8,
         imageUrl: 'assets/steakRec/lomo-relleno.jpg',
@@ -77,6 +80,7 @@ class SteakRedPage extends StatelessWidget {
         isFavorite: false,
       ),
       Recipe(
+        author: 'Jordan Laguna',
         name: 'New York strip steak',
         calificacion: 4.7,
         imageUrl: 'assets/steakRec/new-york-strip-steak-recipe.jpg',
@@ -98,6 +102,7 @@ class SteakRedPage extends StatelessWidget {
         isFavorite: false,
       ),
       Recipe(
+        author: 'Jordan Laguna',
         name: 'Tomahawk steak',
         calificacion: 4.6,
         imageUrl: 'assets/steakRec/Tomahawk-Steak.jpg',

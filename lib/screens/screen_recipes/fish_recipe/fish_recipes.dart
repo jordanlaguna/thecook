@@ -9,6 +9,7 @@ class FishPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Recipe> recipes = [
       Recipe(
+        author: 'Chef Juan',
         name: 'Filete de pescado',
         calificacion: 4.5,
         imageUrl: 'assets/fishRec/filet.jpg',
@@ -25,6 +26,7 @@ class FishPage extends StatelessWidget {
         isFavorite: false,
       ),
       Recipe(
+        author: 'Jordan Laguna',
         name: 'Camarones salsa de coco',
         calificacion: 4.9,
         imageUrl: 'assets/fishRec/camaron.jpg',
@@ -44,6 +46,7 @@ class FishPage extends StatelessWidget {
         isFavorite: false,
       ),
       Recipe(
+        author: 'Jordan Laguna',
         name: 'Mariscada con pasta',
         calificacion: 4.8,
         imageUrl: 'assets/fishRec/mariscada.jpg',
@@ -61,6 +64,7 @@ class FishPage extends StatelessWidget {
         isFavorite: false,
       ),
       Recipe(
+        author: 'Jordan Laguna',
         name: 'Pasta con camarones',
         calificacion: 4.7,
         imageUrl: 'assets/fishRec/pasta_con_camarones.jpg',
@@ -78,6 +82,7 @@ class FishPage extends StatelessWidget {
         isFavorite: false,
       ),
       Recipe(
+        author: 'Jordan Laguna',
         name: 'Pulpo con plumas',
         calificacion: 4.6,
         imageUrl: 'assets/fishRec/pulpo.jpg',

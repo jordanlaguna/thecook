@@ -9,6 +9,7 @@ class RoastedPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Recipe> recipes = [
       Recipe(
+        author: 'Jordan Laguna',
         name: 'Pollo en salsa blanca',
         calificacion: 4.5,
         imageUrl: 'assets/chickenRep/Pollo-en-Salsa-Blanca.jpg',
@@ -25,6 +26,7 @@ class RoastedPage extends StatelessWidget {
         isFavorite: false,
       ),
       Recipe(
+        author: 'Jordan Laguna',
         name: 'Pollo frito en salsa roja',
         calificacion: 4.9,
         imageUrl: 'assets/chickenRep/pollo-frito-con-tomate.jpg',
@@ -45,6 +47,7 @@ class RoastedPage extends StatelessWidget {
         isFavorite: false,
       ),
       Recipe(
+        author: 'Jordan Laguna',
         name: 'Alitas fritas en salsa buffalo',
         calificacion: 4.8,
         imageUrl: 'assets/chickenRep/alitas.jpg',
@@ -61,6 +64,7 @@ class RoastedPage extends StatelessWidget {
         isFavorite: false,
       ),
       Recipe(
+        author: 'Jordan Laguna',
         name: 'Cordon bleu',
         calificacion: 4.7,
         imageUrl: 'assets/chickenRep/Cordon-Bleu.jpg',
@@ -81,6 +85,7 @@ class RoastedPage extends StatelessWidget {
         isFavorite: false,
       ),
       Recipe(
+        author: 'Jordan Laguna',
         name: 'Pechuga en salsa cremosa',
         calificacion: 4.6,
         imageUrl: 'assets/chickenRep/pechuga.jpg',
