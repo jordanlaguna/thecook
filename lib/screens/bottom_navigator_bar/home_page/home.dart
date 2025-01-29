@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:thecook/screens/screen_recipes/fish_recipe/fish_recipes.dart';
-import 'package:thecook/screens/screen_recipes/red_steak/steak_recipes.dart';
-import 'package:thecook/screens/screen_recipes/roasted/roasted_recipes.dart';
-import 'package:thecook/screens/screen_recipes/sauces/sauces.dart';
-import 'package:thecook/screens/screen_recipes/white_steak/steak_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Importa Firebase
+import 'package:thecook/screens/screen_recipes/fish_recipe/screen/fish_recipes.dart';
+import 'package:thecook/screens/screen_recipes/red_steak/screen/steak_red.dart';
+import 'package:thecook/screens/screen_recipes/roasted/screen/roasted_recipes.dart';
+import 'package:thecook/screens/screen_recipes/pasta/screen/pastas.dart';
+import 'package:thecook/screens/screen_recipes/white_steak/screen/steak_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+
+  // Función para obtener el total de recetas por categoría
+  Future<int> _getRecipeCount(String category) async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('recipes')
+        .where('category', isEqualTo: category)
+        .get();
+    return snapshot.size;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,44 +24,44 @@ class HomePage extends StatelessWidget {
     final List<Map<String, dynamic>> categories = [
       {
         'name': 'Carnes Blancas',
-        'total': 15,
+        'category': 'Carne blanca',
         'image': 'assets/home_page/white_steak.jpg',
-        'route': SteakPage(),
+        'route': SteakPage(category: 'Carne blanca'),
       },
       {
         'name': 'Carnes Rojas',
-        'total': 10,
+        'category': 'Carne roja',
         'image': 'assets/home_page/red_steak.jpg',
-        'route': SteakRedPage(),
+        'route': SteakRedPage(category: 'Carne roja'),
       },
       {
         'name': 'Mariscos',
-        'total': 8,
+        'category': 'Mariscos',
         'image': 'assets/home_page/fish.jpg',
-        'route': FishPage(),
+        'route': FishPage(category: 'Mariscos'),
       },
       {
         'name': 'Asados',
-        'total': 5,
+        'category': 'Asados',
         'image': 'assets/home_page/roasted.jpg',
-        'route': RoastedPage(),
+        'route': RoastedPage(category: 'Asados'),
       },
       {
-        'name': 'Salsas',
-        'total': 12,
-        'image': 'assets/home_page/sauce.jpg',
-        'route': SaucesPage(),
+        'name': 'Pastas',
+        'category': 'Pastas',
+        'image': 'assets/home_page/pastas.jpg',
+        'route': PastasPage(category: 'Pastas'),
       },
     ];
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: const Text(
+        title: const Center(
+          child: Text(
             'Recetas de Cocina',
             style: TextStyle(
                 fontSize: 24,
-                fontFamily: 'Monserrat',
+                fontFamily: 'Montserrat',
                 fontWeight: FontWeight.bold),
           ),
         ),
@@ -60,11 +70,19 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         itemCount: categories.length,
         itemBuilder: (context, index) {
-          return RecipeCard(
-            name: categories[index]['name'],
-            total: categories[index]['total'],
-            imageUrl: categories[index]['image'],
-            route: categories[index]['route'],
+          String category = categories[index]['category'];
+
+          return FutureBuilder<int>(
+            future: _getRecipeCount(category),
+            builder: (context, snapshot) {
+              int totalRecipes = snapshot.data ?? 0;
+              return RecipeCard(
+                name: categories[index]['name'],
+                total: totalRecipes,
+                imageUrl: categories[index]['image'],
+                route: categories[index]['route'],
+              );
+            },
           );
         },
       ),
@@ -72,7 +90,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// Widget personalizado para las tarjetas
+// Widget personalizado para mostrar cada sección
 class RecipeCard extends StatelessWidget {
   final String name;
   final int total;
@@ -140,7 +158,7 @@ class RecipeCard extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.blue,
                   fontSize: 16,
-                  fontFamily: "monserrat",
+                  fontFamily: "Montserrat",
                 ),
               ),
             ),

@@ -28,7 +28,7 @@ class _RecipeFormState extends State<RecipeForm> {
     'Carne roja',
     'Mariscos',
     'Asados',
-    'Salsas',
+    'Pastas',
   ];
 
   late RecipesAdd _recipesAdd;
@@ -43,6 +43,7 @@ class _RecipeFormState extends State<RecipeForm> {
         author: '',
         imageUrl: '',
         ingredients: [],
+        recipeId: '',
       ),
     );
   }
