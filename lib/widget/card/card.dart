@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:thecook/model/recipes_list.dart';
 import 'package:thecook/widget/modal_recipes/modal.dart';
+import 'package:intl/intl.dart';
 
 class RecipeCard extends StatefulWidget {
   final Recipe recipe;
@@ -38,6 +40,43 @@ class _RecipeCardState extends State<RecipeCard> {
     }
   }
 
+  void _showFullImage() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.black54,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            InteractiveViewer(
+              panEnabled: true,
+              boundaryMargin: const EdgeInsets.all(20),
+              minScale: 0.5,
+              maxScale: 3.0,
+              child: CachedNetworkImage(
+                imageUrl: widget.recipe.imageUrl,
+                fit: BoxFit.contain,
+                placeholder: (context, url) =>
+                    const Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => const Center(
+                    child: Icon(Icons.broken_image,
+                        size: 150, color: Colors.grey)),
+              ),
+            ),
+            Positioned(
+              top: 20,
+              right: 20,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -53,7 +92,6 @@ class _RecipeCardState extends State<RecipeCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Título de la receta
                 Expanded(
                   child: Text(
                     widget.recipe.name,
@@ -65,7 +103,6 @@ class _RecipeCardState extends State<RecipeCard> {
                     maxLines: 1,
                   ),
                 ),
-                // Íconos de favorito y liked
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -106,7 +143,6 @@ class _RecipeCardState extends State<RecipeCard> {
                 ),
               ],
             ),
-            // Autor de la receta
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -118,23 +154,32 @@ class _RecipeCardState extends State<RecipeCard> {
               ),
             ),
             const SizedBox(height: 8),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                widget.recipe.imageUrl,
-                height: 150,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return const Center(child: CircularProgressIndicator());
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return const Center(
-                    child:
-                        Icon(Icons.broken_image, size: 150, color: Colors.grey),
-                  );
-                },
+            GestureDetector(
+              onTap: _showFullImage,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: CachedNetworkImage(
+                  imageUrl: widget.recipe.imageUrl,
+                  height: 180,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => const Center(
+                      child: Icon(Icons.broken_image,
+                          size: 150, color: Colors.grey)),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Fecha: ${widget.recipe.date != null ? DateFormat("yyyy-MM-dd").format(widget.recipe.date!.toDate()) : 'Desconocida'}',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[700],
+                ),
               ),
             ),
             const SizedBox(height: 8),

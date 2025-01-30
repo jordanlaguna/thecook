@@ -4,7 +4,7 @@ class Recipe {
   final String recipeId;
   final String name;
   final String author;
-
+  final Timestamp? date;
   final String imageUrl;
   final List<String> ingredients;
   bool isFavorite;
@@ -15,6 +15,7 @@ class Recipe {
     required this.name,
     required this.author,
     required this.imageUrl,
+    this.date,
     required this.ingredients,
     this.isFavorite = false,
     this.liked = false,
@@ -40,7 +41,7 @@ class Recipe {
     }).toList();
   }
 
-  // ✅ Método para convertir un documento de Firestore a un objeto Recipe
+  // Método para convertir un documento de Firestore a un objeto Recipe
   factory Recipe.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
 
@@ -49,6 +50,7 @@ class Recipe {
       name: data['name'] ?? 'Nombre desconocido',
       author: data['author'] ?? 'Autor desconocido',
       imageUrl: data['imageURL'] ?? '',
+      date: data['date'] as Timestamp?,
       ingredients: List<String>.from(data['ingredients'] ?? []),
       isFavorite: data['isFavorite'] ?? false,
       liked: data['liked'] ?? false,

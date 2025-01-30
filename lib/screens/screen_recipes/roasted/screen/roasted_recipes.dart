@@ -15,8 +15,8 @@ class RoastedPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'CookRecep',
+        title: Text(
+          category,
           style: TextStyle(
             fontSize: 24,
             fontFamily: 'Montserrat',
