@@ -1,12 +1,65 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:thecook/screens/bottom_navigator_bar/favorite_page/controller/favorite_controller.dart';
 import 'package:thecook/widget/modal_recipes/details_modal.dart';
 
-class FavoritePage extends StatelessWidget {
+class FavoritePage extends StatefulWidget {
   const FavoritePage({super.key});
+
+  @override
+  State<FavoritePage> createState() => _FavoritePageState();
+}
+
+class _FavoritePageState extends State<FavoritePage> {
+  Future<bool> _isFavorite(String recipeId) async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('favorites')
+          .doc(userId)
+          .collection('recipes')
+          .doc(recipeId)
+          .get();
+      return doc.exists;
+    }
+    return false;
+  }
+
+  void _toggleFavorite(String recipeId) async {
+    try {
+      String? userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId != null) {
+        DocumentSnapshot doc = await FirebaseFirestore.instance
+            .collection('favorites')
+            .doc(userId)
+            .collection('recipes')
+            .doc(recipeId)
+            .get();
+
+        if (doc.exists) {
+          await FirebaseFirestore.instance
+              .collection('favorites')
+              .doc(userId)
+              .collection('recipes')
+              .doc(recipeId)
+              .delete();
+        } else {
+          await FirebaseFirestore.instance
+              .collection('favorites')
+              .doc(userId)
+              .collection('recipes')
+              .doc(recipeId)
+              .set({'isFavorite': true});
+        }
+        setState(() {});
+      }
+    } catch (e) {
+      print('Error al alternar "Me gusta": $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +93,6 @@ class FavoritePage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final recipe = favoriteRecipes[index];
 
-                // Convertimos la fecha de Firestore (Timestamp) a DateTime
                 String formattedDate = 'Desconocida';
                 if (recipe['date'] != null) {
                   try {
@@ -60,7 +112,7 @@ class FavoritePage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         InteractiveViewer(
                           panEnabled: true,
@@ -70,7 +122,7 @@ class FavoritePage extends StatelessWidget {
                           child: CachedNetworkImage(
                             imageUrl: recipe["imageURL"],
                             width: 100,
-                            height: 100,
+                            height: 125,
                             fit: BoxFit.cover,
                             placeholder: (context, url) => const Center(
                                 child: CircularProgressIndicator()),
@@ -85,35 +137,67 @@ class FavoritePage extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                recipe['name'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  fontFamily: 'Montserrat',
-                                ),
-                                overflow: TextOverflow.ellipsis,
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 5.0),
+                                      child: Text(
+                                        recipe['name'],
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          fontFamily: 'Montserrat',
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5.0),
+                                    child: FutureBuilder<bool>(
+                                      future: _isFavorite(recipe['recipeId']),
+                                      builder: (context, snapshot) {
+                                        bool isFavorite =
+                                            snapshot.data ?? false;
+                                        return IconButton(
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                          icon: Icon(
+                                            isFavorite
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            color: isFavorite
+                                                ? Colors.red
+                                                : Colors.grey,
+                                          ),
+                                          onPressed: () => _toggleFavorite(
+                                              recipe['recipeId']),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 5),
+                              const SizedBox(height: 3),
                               Text(
                                 "Categoría: ${recipe['category']}",
                                 style: const TextStyle(
                                     fontSize: 14, fontFamily: 'Montserrat'),
                               ),
-                              const SizedBox(height: 5),
+                              const SizedBox(height: 3),
                               Text(
                                 "Autor: ${recipe['author']}",
                                 style: const TextStyle(
                                     fontSize: 12, fontFamily: 'Montserrat'),
                               ),
-                              const SizedBox(height: 5),
+                              const SizedBox(height: 3),
                               Text(
                                 "Fecha: $formattedDate",
                                 style: const TextStyle(
                                     fontSize: 12, fontFamily: 'Montserrat'),
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              const SizedBox(height: 5),
                               TextButton(
                                 onPressed: () {
                                   _showRecipeDetails(
@@ -128,7 +212,7 @@ class FavoritePage extends StatelessWidget {
                                     fontSize: 14,
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
