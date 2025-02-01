@@ -2,7 +2,7 @@
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:thecook/screens/bottom_navigator_bar/favorite_page/favorite.dart';
+import 'package:thecook/screens/bottom_navigator_bar/favorite_page/screen/favorite.dart';
 import 'package:thecook/screens/bottom_navigator_bar/home_page/home.dart';
 import 'package:thecook/screens/bottom_navigator_bar/profile_page/screen/profile.dart';
 import 'package:thecook/screens/bottom_navigator_bar/settings_page/settings.dart';

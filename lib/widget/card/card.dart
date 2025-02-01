@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:thecook/model/recipes_list.dart';
@@ -18,14 +19,50 @@ class RecipeCard extends StatefulWidget {
 }
 
 class _RecipeCardState extends State<RecipeCard> {
-  Future<void> _updateFavorite(bool isFavorite) async {
-    try {
-      await FirebaseFirestore.instance
+  Future<bool> _isFavorite() async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('favorites')
+          .doc(userId)
           .collection('recipes')
           .doc(widget.recipe.recipeId)
-          .update({'isFavorite': isFavorite});
+          .get();
+      return doc.exists;
+    }
+    return false;
+  }
+
+  void _toggleFavorite(String recipeId) async {
+    try {
+      String? userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId != null) {
+        DocumentSnapshot doc = await FirebaseFirestore.instance
+            .collection('favorites')
+            .doc(userId)
+            .collection('recipes')
+            .doc(recipeId)
+            .get();
+
+        if (doc.exists) {
+          await FirebaseFirestore.instance
+              .collection('favorites')
+              .doc(userId)
+              .collection('recipes')
+              .doc(recipeId)
+              .delete();
+        } else {
+          await FirebaseFirestore.instance
+              .collection('favorites')
+              .doc(userId)
+              .collection('recipes')
+              .doc(recipeId)
+              .set({'isFavorite': true});
+        }
+        setState(() {});
+      }
     } catch (e) {
-      print("Error al actualizar favorito: $e");
+      print('Error al alternar "Me gusta": $e');
     }
   }
 
@@ -59,8 +96,9 @@ class _RecipeCardState extends State<RecipeCard> {
                 placeholder: (context, url) =>
                     const Center(child: CircularProgressIndicator()),
                 errorWidget: (context, url, error) => const Center(
-                    child: Icon(Icons.broken_image,
-                        size: 150, color: Colors.grey)),
+                  child:
+                      Icon(Icons.broken_image, size: 150, color: Colors.grey),
+                ),
               ),
             ),
             Positioned(
@@ -106,21 +144,20 @@ class _RecipeCardState extends State<RecipeCard> {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      icon: Icon(
-                        widget.recipe.isFavorite
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        color:
-                            widget.recipe.isFavorite ? Colors.red : Colors.grey,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          widget.recipe.isFavorite = !widget.recipe.isFavorite;
-                        });
-                        _updateFavorite(widget.recipe.isFavorite);
+                    FutureBuilder<bool>(
+                      future: _isFavorite(),
+                      builder: (context, snapshot) {
+                        bool isFavorite = snapshot.data ?? false;
+                        return IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          icon: Icon(
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: isFavorite ? Colors.red : Colors.grey,
+                          ),
+                          onPressed: () =>
+                              _toggleFavorite(widget.recipe.recipeId),
+                        );
                       },
                     ),
                     IconButton(
@@ -166,8 +203,9 @@ class _RecipeCardState extends State<RecipeCard> {
                   placeholder: (context, url) =>
                       const Center(child: CircularProgressIndicator()),
                   errorWidget: (context, url, error) => const Center(
-                      child: Icon(Icons.broken_image,
-                          size: 150, color: Colors.grey)),
+                    child:
+                        Icon(Icons.broken_image, size: 150, color: Colors.grey),
+                  ),
                 ),
               ),
             ),

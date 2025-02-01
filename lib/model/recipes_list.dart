@@ -7,7 +7,6 @@ class Recipe {
   final Timestamp? date;
   final String imageUrl;
   final List<String> ingredients;
-  bool isFavorite;
   bool liked;
 
   Recipe({
@@ -17,7 +16,6 @@ class Recipe {
     required this.imageUrl,
     this.date,
     required this.ingredients,
-    this.isFavorite = false,
     this.liked = false,
   });
 
@@ -35,7 +33,6 @@ class Recipe {
         author: data['author'] ?? 'Autor desconocido',
         imageUrl: data['imageURL'] ?? '',
         ingredients: List<String>.from(data['ingredients'] ?? []),
-        isFavorite: data['isFavorite'] ?? false,
         liked: data['liked'] ?? false,
       );
     }).toList();
@@ -52,7 +49,6 @@ class Recipe {
       imageUrl: data['imageURL'] ?? '',
       date: data['date'] as Timestamp?,
       ingredients: List<String>.from(data['ingredients'] ?? []),
-      isFavorite: data['isFavorite'] ?? false,
       liked: data['liked'] ?? false,
     );
   }
