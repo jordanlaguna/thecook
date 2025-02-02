@@ -18,8 +18,6 @@ migrate_working_dir/
 *.iws
 .idea/
 
-.env
-assets/services_account_file.json
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line

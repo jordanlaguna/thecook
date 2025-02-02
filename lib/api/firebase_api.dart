@@ -40,7 +40,7 @@ class FirebaseApi {
     final userSnapshot =
         await FirebaseFirestore.instance.collection('user').get();
     final tokens = userSnapshot.docs
-        .map((doc) => doc.data()['token'] as String?)
+        .map((doc) => doc.data()['fcmToken'] as String?)
         .where((token) => token != null)
         .toList();
     for (String? token in tokens) {
