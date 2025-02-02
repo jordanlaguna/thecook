@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:thecook/main.dart';
 import 'package:thecook/model/user.dart';
 
 class RegisterServices {
@@ -23,6 +24,7 @@ class RegisterServices {
       );
       // save user in firestore
       await _firestore.collection('user').doc(user.uid).set(user.toMap());
+      await updateFCMToken();
     } catch (e) {
       print(e);
     }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:thecook/api/firebase_api.dart';
 import 'package:thecook/model/recipes_list.dart';
 import 'package:thecook/screens/add_recipes/controller/recipes_add.dart';
 import 'package:thecook/screens/add_recipes/services/image_services.dart';
@@ -112,7 +113,11 @@ class _RecipeFormState extends State<RecipeForm> {
           );
         }
       }
-
+      final firebaseApi = FirebaseApi();
+      await firebaseApi.sendNotificationToAllUsers(
+        '$recipeName Ha agregado una receta nueva',
+        'Ha agregado una nueva receta de: $_selectedCategory',
+      );
       // clean the text fields
       _recipeNameController.clear();
       _recipeIngredientsController.clear();

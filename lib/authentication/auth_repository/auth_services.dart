@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:thecook/main.dart';
 import 'package:thecook/model/user.dart';
 
 class AuthServices {
@@ -41,7 +42,7 @@ class AuthServices {
       // verify if the user exists in Firestore
       final userDoc = _firestore.collection('user').doc(user.uid);
       final docSnapshot = await userDoc.get();
-
+      await updateFCMToken();
       if (!docSnapshot.exists) {
         await userDoc.set(user.toMap());
         print("Usuario guardado en Firestore.");
