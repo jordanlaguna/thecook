@@ -50,107 +50,116 @@ class HelpPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView(
-          children: <Widget>[
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Center(
-                child: Text(
-                  'Ayuda y Soporte',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              subtitle: Column(
-                children: [
-                  SizedBox(height: size.height * 0.03),
-                  const Center(
-                    child: Image(
-                      image: AssetImage('assets/logos/Logo.png'),
-                      height: 280,
-                      width: 280,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.orange[50]!, Colors.orange[100]!],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView(
+            children: <Widget>[
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Center(
+                  child: Text(
+                    'Ayuda y Soporte',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                ],
+                ),
+                subtitle: Column(
+                  children: [
+                    SizedBox(height: size.height * 0.03),
+                    const Center(
+                      child: Image(
+                        image: AssetImage('assets/logos/Logo.png'),
+                        height: 280,
+                        width: 280,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const Divider(),
-            SizedBox(height: size.height * 0.02),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10.0),
+              const Divider(),
+              SizedBox(height: size.height * 0.02),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: ListTile(
+                  title: const Text(
+                    'Centro de Ayuda',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  trailing: const Icon(Icons.arrow_forward),
+                  onTap: () {},
+                ),
               ),
-              child: ListTile(
-                title: const Text(
-                  'Centro de Ayuda',
+              const Divider(),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: ListTile(
+                  title: const Text(
+                    'Condiciones y Políticas',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  trailing: const Icon(Icons.arrow_forward),
+                  onTap: () {},
+                ),
+              ),
+              const Divider(),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: ListTile(
+                  title: const Text(
+                    'Guía',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  trailing: const Icon(Icons.arrow_forward),
+                  onTap: () {
+                    print('Guía');
+                  },
+                ),
+              ),
+              const Divider(),
+              const ListTile(
+                title: Text(
+                  '© 2025 CookRecep. Todos los derechos reservados.',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 14,
                     fontFamily: 'Montserrat',
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                trailing: const Icon(Icons.arrow_forward),
-                onTap: () {},
               ),
-            ),
-            const Divider(),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: ListTile(
-                title: const Text(
-                  'Condiciones y Políticas',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                trailing: const Icon(Icons.arrow_forward),
-                onTap: () {},
-              ),
-            ),
-            const Divider(),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: ListTile(
-                title: const Text(
-                  'Guía',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                trailing: const Icon(Icons.arrow_forward),
-                onTap: () {
-                  print('Guía');
-                },
-              ),
-            ),
-            const Divider(),
-            const ListTile(
-              title: Text(
-                '© 2025 CookRecep. Todos los derechos reservados.',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -16,6 +18,8 @@ class RecipeForm extends StatefulWidget {
 }
 
 class _RecipeFormState extends State<RecipeForm> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _recipeNameController = TextEditingController();
   final TextEditingController _recipeIngredientsController =
       TextEditingController();
@@ -90,6 +94,16 @@ class _RecipeFormState extends State<RecipeForm> {
     final List<String> souce = souceText.split(',');
 
     try {
+      User? user = _auth.currentUser;
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Usuario no registrado.')),
+        );
+        return;
+      }
+      DocumentSnapshot userDoc =
+          await _firestore.collection('user').doc(user.uid).get();
+      String authorName = userDoc['name'] ?? 'Autor desconocido';
       // call the addRecipe method from RecipesAdd
       String? recipeId = await _recipesAdd.addRecipe(
         context,
@@ -115,13 +129,21 @@ class _RecipeFormState extends State<RecipeForm> {
       }
       final firebaseApi = FirebaseApi();
       await firebaseApi.sendNotificationToAllUsers(
-        '$recipeName Ha agregado una receta nueva',
+        '$authorName agregó una receta nueva',
         'Ha agregado una nueva receta de: $_selectedCategory',
       );
+      // save notification in firebase firestore
+      await _firestore.collection('notifications').add({
+        'title': '$authorName ha agregado una receta nueva',
+        'message': 'Ha agregado una nueva receta de: $_selectedCategory',
+        'userId': user.uid,
+        'createdAt': Timestamp.now(),
+      });
       // clean the text fields
       _recipeNameController.clear();
       _recipeIngredientsController.clear();
       _recipeSouceController.clear();
+      _selectedCategory = null;
       setState(() {
         _imageFile = null;
       });

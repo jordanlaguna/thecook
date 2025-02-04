@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
-import 'package:googleapis_auth/auth.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart' as http;
 
@@ -70,7 +69,7 @@ class FirebaseApi {
       'message': {
         'token': token,
         'notification': {
-          'title': 'Nuevo mensaje de $senderName',
+          'title': '$senderName agregó una nueva receta',
           'body': message,
         },
         'data': {

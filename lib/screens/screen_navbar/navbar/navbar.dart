@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:thecook/authentication/screen/login_screen.dart';
-import 'package:thecook/screens/screen_navbar/slider_drawer/archive/archive.dart';
+import 'package:thecook/screens/screen_navbar/slider_drawer/notifications/screen/notification.dart';
 import 'package:thecook/screens/screen_navbar/slider_drawer/help/help.dart';
 import 'package:thecook/screens/screen_navbar/slider_drawer/profile/screen/profile.dart';
 
@@ -84,9 +84,9 @@ class _NavBarState extends State<NavBar> {
                 buildListTile(context, Icons.account_circle, 'Perfil',
                     const ProfileDrawer()),
                 buildListTile(context, Icons.notification_add_rounded,
-                    'Notificaciones', const ArchivePage()),
-                buildListTile(context, Icons.work_history_rounded, 'Archivados',
-                    const HelpPage()),
+                    'Notificaciones', const NotificacionPage()),
+                buildListTile(
+                    context, Icons.settings, 'Ayuda', const HelpPage()),
                 const Divider(
                   height: 30,
                   color: Color.fromARGB(255, 0, 0, 0),
