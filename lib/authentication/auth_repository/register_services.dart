@@ -9,28 +9,32 @@ class RegisterServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> registerUser(String name, String email, String password) async {
+  Future<bool> registerUser(String name, String email, String password) async {
     try {
       final UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
       UserModel user = UserModel(
         uid: userCredential.user!.uid,
         name: name,
         email: email,
-        password: password,
       );
-      // save user in firestore
+
       await _firestore.collection('user').doc(user.uid).set(user.toMap());
+
       await updateFCMToken();
+
+      return true;
     } catch (e) {
-      print(e);
+      print("Error al registrar usuario: $e");
+      return false;
     }
   }
 
-  // metodo para loguear
+  // Método para loguear
   Future<UserCredential> loginWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -39,7 +43,7 @@ class RegisterServices {
         password: password,
       );
     } catch (e) {
-      print("error: $e");
+      print("Error en login: $e");
       throw e;
     }
   }

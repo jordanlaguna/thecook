@@ -11,7 +11,7 @@ class HelpPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'CookRecep',
+          ' TheCook',
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
@@ -53,7 +53,10 @@ class HelpPage extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.orange[50]!, Colors.orange[100]!],
+            colors: [
+              Colors.orange[50]!,
+              const Color.fromARGB(255, 242, 221, 190)
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -87,11 +90,13 @@ class HelpPage extends StatelessWidget {
                   ],
                 ),
               ),
-              const Divider(),
+              const Divider(
+                color: Colors.white,
+              ),
               SizedBox(height: size.height * 0.02),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: ListTile(
@@ -107,10 +112,12 @@ class HelpPage extends StatelessWidget {
                   onTap: () {},
                 ),
               ),
-              const Divider(),
+              const Divider(
+                color: Colors.white,
+              ),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: ListTile(
@@ -126,10 +133,12 @@ class HelpPage extends StatelessWidget {
                   onTap: () {},
                 ),
               ),
-              const Divider(),
+              const Divider(
+                color: Colors.white,
+              ),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: ListTile(
@@ -147,7 +156,9 @@ class HelpPage extends StatelessWidget {
                   },
                 ),
               ),
-              const Divider(),
+              const Divider(
+                color: Colors.white,
+              ),
               const ListTile(
                 title: Text(
                   '© 2025 CookRecep. Todos los derechos reservados.',

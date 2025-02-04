@@ -210,9 +210,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 30,
                       ),
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           RegisterServices registerServices =
                               RegisterServices();
+
                           if (_nameController.text.isEmpty ||
                               _emailController.text.isEmpty ||
                               _passwordController.text.isEmpty ||
@@ -226,18 +227,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             );
                             return;
                           }
+
+                          if (_passwordController.text.length < 6) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    "La contraseña debe tener al menos 6 caracteres."),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+
+                          if (_passwordController.text !=
+                              _confirmPasswordController.text) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Las contraseñas no coinciden."),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+
                           try {
-                            if (_passwordController.text ==
-                                _confirmPasswordController.text) {
-                              registerServices.registerUser(
-                                  _nameController.text,
-                                  _emailController.text,
-                                  _passwordController.text);
+                            bool isRegistered =
+                                await registerServices.registerUser(
+                              _nameController.text,
+                              _emailController.text,
+                              _passwordController.text,
+                            );
+
+                            if (isRegistered) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text("Usuario registrado con éxito."),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+
+                              // Esperar 2 segundos antes de limpiar y volver atrás
+                              await Future.delayed(Duration(seconds: 2));
+
+                              _confirmPasswordController.clear();
+                              _emailController.clear();
+                              _nameController.clear();
+                              _passwordController.clear();
+
+                              Navigator.pop(context);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content:
-                                      Text("Las contraseñas no coinciden."),
+                                      Text("No se pudo registrar el usuario."),
                                   backgroundColor: Colors.red,
                                 ),
                               );
@@ -245,13 +288,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content:
-                                    Text("Error al guardar la información."),
+                                content: Text("Error al registrar: $e"),
                                 backgroundColor: Colors.red,
                               ),
                             );
                           }
-                          print("Usuario registrado");
                         },
                         child: Container(
                           height: 50,
@@ -264,8 +305,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             child: Text(
                               "Registrarse",
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),

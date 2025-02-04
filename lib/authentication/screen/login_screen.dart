@@ -154,7 +154,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 20),
                       const Text(
                         "¿Olvidaste tu contraseña?",
-                        style: TextStyle(color: Colors.grey),
+                        style: TextStyle(
+                            color: Colors.grey, fontFamily: 'Montserrat'),
                       ),
                       const SizedBox(height: 20),
                       GestureDetector(
@@ -206,13 +207,18 @@ class _LoginScreenState extends State<LoginScreen> {
                               "Iniciar Sesión",
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Montserrat'),
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 5),
-                      const Text("- O -", style: TextStyle(color: Colors.grey)),
+                      const Text(
+                        "- O -",
+                        style: TextStyle(
+                            color: Colors.grey, fontFamily: 'Montserrat'),
+                      ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -234,7 +240,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               "Registrarse",
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Montserrat'),
                             ),
                           ),
                         ),

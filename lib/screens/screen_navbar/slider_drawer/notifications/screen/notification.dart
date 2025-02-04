@@ -38,7 +38,10 @@ class _NotificacionPageState extends State<NotificacionPage> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.orange[50]!, Colors.orange[100]!],
+            colors: [
+              Colors.orange[50]!,
+              const Color.fromARGB(255, 242, 221, 190)
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),

@@ -21,11 +21,19 @@ class HomeModule extends StatefulWidget {
 
 class _ModuleMainState extends State<HomeModule> {
   int index = 0;
+
   final List<Widget> screens = [
     const HomePage(),
     const FavoritePage(),
     const ProfilePage(),
     const SettingsPage(),
+  ];
+
+  final List<String> titles = [
+    "TheCook",
+    "Favoritos",
+    "Perfil",
+    "Configuración",
   ];
 
   List<Widget>? _getActionsForPage(int index) {
@@ -36,16 +44,8 @@ class _ModuleMainState extends State<HomeModule> {
   @override
   Widget build(BuildContext context) {
     final items = [
-      const Icon(
-        Icons.home,
-        color: Colors.white,
-        size: 35,
-      ),
-      const Icon(
-        Icons.favorite,
-        color: Colors.white,
-        size: 35,
-      ),
+      const Icon(Icons.home, color: Colors.white, size: 35),
+      const Icon(Icons.favorite, color: Colors.white, size: 35),
       const Icon(Icons.account_circle, color: Colors.white, size: 35),
       const Icon(Icons.settings, color: Colors.white, size: 35),
     ];
@@ -55,9 +55,9 @@ class _ModuleMainState extends State<HomeModule> {
         backgroundColor: Colors.blue[50],
         drawer: const NavBar(),
         appBar: AppBar(
-          title: const Text(
-            'CookRecep',
-            style: TextStyle(
+          title: Text(
+            titles[index],
+            style: const TextStyle(
               fontSize: 24,
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.w400,
@@ -68,11 +68,14 @@ class _ModuleMainState extends State<HomeModule> {
           backgroundColor: Colors.white,
           flexibleSpace: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-                Colors.orange[900]!,
-                Colors.orange[800]!,
-                Colors.orange[400]!,
-              ]),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                colors: [
+                  Colors.orange[900]!,
+                  Colors.orange[800]!,
+                  Colors.orange[400]!,
+                ],
+              ),
             ),
           ),
           iconTheme: const IconThemeData(color: Colors.white, size: 35),

@@ -19,18 +19,6 @@ class _ProfilePageState extends State<ProfilePage> {
     final String uid = _user?.uid ?? '';
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: Text(
-            'Perfil',
-            style: TextStyle(
-              fontSize: 24,
-              fontFamily: 'Monserrat',
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 40.0, left: 16.0, right: 16.0),

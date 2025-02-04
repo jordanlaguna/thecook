@@ -16,7 +16,6 @@ class ProfileController {
           return userData['photoURL'];
         }
       }
-
       // the user's photo is not in Firestore, so we get it from Firebase Authentication
       User? user = _auth.currentUser;
       if (user != null && user.photoURL != null) {

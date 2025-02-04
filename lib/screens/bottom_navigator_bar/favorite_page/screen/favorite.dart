@@ -66,9 +66,6 @@ class _FavoritePageState extends State<FavoritePage> {
     final FavoriteController favoriteController = FavoriteController();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(child: Text('Favoritos')),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: FutureBuilder<List<Map<String, dynamic>>>(
@@ -102,7 +99,6 @@ class _FavoritePageState extends State<FavoritePage> {
                     print("Error al convertir fecha: $e");
                   }
                 }
-
                 return Card(
                   elevation: 3,
                   margin: const EdgeInsets.symmetric(vertical: 8),
