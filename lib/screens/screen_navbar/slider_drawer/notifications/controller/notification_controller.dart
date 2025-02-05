@@ -38,7 +38,7 @@ class NotificationController {
             uid: data['userId'] ?? '',
           );
         })
-        .where((notification) => notification.uid != currentUserUid) //
+        .where((notification) => notification.uid != currentUserUid)
         .toList();
   }
 }

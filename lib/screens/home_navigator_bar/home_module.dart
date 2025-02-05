@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:thecook/screens/bottom_navigator_bar/favorite_page/screen/favorite.dart';
 import 'package:thecook/screens/bottom_navigator_bar/home_page/home.dart';
 import 'package:thecook/screens/bottom_navigator_bar/profile_page/screen/profile.dart';
-import 'package:thecook/screens/bottom_navigator_bar/settings_page/settings.dart';
+import 'package:thecook/screens/bottom_navigator_bar/my_recipe_page/screen/my_recipe.dart';
 import 'package:thecook/screens/screen_navbar/navbar/navbar.dart';
 
 void main() {
@@ -26,14 +26,14 @@ class _ModuleMainState extends State<HomeModule> {
     const HomePage(),
     const FavoritePage(),
     const ProfilePage(),
-    const SettingsPage(),
+    const MyRecipePage(),
   ];
 
   final List<String> titles = [
     "TheCook",
     "Favoritos",
     "Perfil",
-    "Configuración",
+    "Mis Recetas",
   ];
 
   List<Widget>? _getActionsForPage(int index) {
@@ -47,7 +47,7 @@ class _ModuleMainState extends State<HomeModule> {
       const Icon(Icons.home, color: Colors.white, size: 35),
       const Icon(Icons.favorite, color: Colors.white, size: 35),
       const Icon(Icons.account_circle, color: Colors.white, size: 35),
-      const Icon(Icons.settings, color: Colors.white, size: 35),
+      const Icon(Icons.dining_rounded, color: Colors.white, size: 35),
     ];
     return MaterialApp(
       debugShowCheckedModeBanner: false,

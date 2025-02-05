@@ -26,48 +26,51 @@ class _ProfilePageState extends State<ProfilePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Foto de perfil
-              CircleAvatar(
-                radius: 80,
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1,
+              GestureDetector(
+                onTap: () {
+                  _showFullImageDialog(context, uid);
+                },
+                child: CircleAvatar(
+                  radius: 80,
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1,
+                      ),
                     ),
-                  ),
-                  child: ClipOval(
-                    child: FutureBuilder<String?>(
-                      future: _profileController.getUserPhotoURL(uid),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        }
-                        if (snapshot.hasError) {
-                          return const Icon(Icons.error);
-                        } else {
-                          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                            return Image.network(
-                              snapshot.data!,
-                              fit: BoxFit.cover,
-                              width: 100,
-                              height: 100,
-                            );
-                          } else {
-                            return const Icon(Icons.account_circle, size: 50);
+                    child: ClipOval(
+                      child: FutureBuilder<String?>(
+                        future: _profileController.getUserPhotoURL(uid),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
                           }
-                        }
-                      },
+                          if (snapshot.hasError) {
+                            return const Icon(Icons.error);
+                          } else {
+                            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                              return Image.network(
+                                snapshot.data!,
+                                fit: BoxFit.cover,
+                                width: 100,
+                                height: 100,
+                              );
+                            } else {
+                              return const Icon(Icons.account_circle, size: 50);
+                            }
+                          }
+                        },
+                      ),
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-              // Nombre y correo del usuario
               FutureBuilder<Map<String, dynamic>>(
                 future: _profileController.getUserData(uid),
                 builder: (BuildContext context,
@@ -100,9 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   }
                 },
               ),
-
               const SizedBox(height: 40),
-              // Botón para agregar receta
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(
@@ -124,6 +125,37 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showFullImageDialog(BuildContext context, String uid) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: FutureBuilder<String?>(
+            future: _profileController.getUserPhotoURL(uid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError ||
+                  !snapshot.hasData ||
+                  snapshot.data!.isEmpty) {
+                return const Icon(Icons.error, size: 100, color: Colors.red);
+              }
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  snapshot.data!,
+                  fit: BoxFit.cover,
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
