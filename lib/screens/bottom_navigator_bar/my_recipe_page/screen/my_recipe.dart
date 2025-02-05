@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:thecook/screens/bottom_navigator_bar/my_recipe_page/controller/my_recipe_controller.dart';
+import 'package:thecook/widget/modal_recipes/details_modal.dart';
 
 class MyRecipePage extends StatefulWidget {
   const MyRecipePage({super.key});
@@ -152,6 +153,21 @@ class _MyRecipePageState extends State<MyRecipePage> {
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
+                                TextButton(
+                                  onPressed: () {
+                                    _showRecipeDetails(
+                                        context, recipe.recipeId);
+                                  },
+                                  child: const Text(
+                                    'Ver receta',
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -164,4 +180,13 @@ class _MyRecipePageState extends State<MyRecipePage> {
       ),
     );
   }
+}
+
+void _showRecipeDetails(BuildContext context, String recipeId) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return DetailsModal(recipeId: recipeId);
+    },
+  );
 }
