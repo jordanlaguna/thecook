@@ -89,7 +89,7 @@ class _MyRecipePageState extends State<MyRecipePage> {
                             child: CachedNetworkImage(
                               imageUrl: recipe.imageUrl,
                               width: 100,
-                              height: 90,
+                              height: 120,
                               fit: BoxFit.cover,
                               placeholder: (context, url) => const Center(
                                 child: CircularProgressIndicator(),
