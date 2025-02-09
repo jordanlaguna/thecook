@@ -66,53 +66,173 @@ class _RecipeCardState extends State<RecipeCard> {
     }
   }
 
-  Future<void> _updateLike(bool liked) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('recipes')
+  void _checkUserLike() async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('likes')
           .doc(widget.recipe.recipeId)
-          .update({'liked': liked});
-    } catch (e) {
-      print("Error al actualizar like: $e");
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      setState(() {
+        widget.recipe.liked = doc.exists;
+      });
     }
   }
 
-  void _showFullImage() {
+  Stream<int> _getLikeCount() {
+    return FirebaseFirestore.instance
+        .collection('likes')
+        .doc(widget.recipe.recipeId)
+        .collection('users')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
+  }
+
+  void _toggleLike() async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      print("Usuario no autenticado");
+      return;
+    }
+
+    try {
+      DocumentSnapshot userDoc =
+          await FirebaseFirestore.instance.collection('user').doc(userId).get();
+
+      if (!userDoc.exists) {
+        print("Error: Usuario no encontrado en Firestore.");
+        return;
+      }
+
+      Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+      if (userData == null) {
+        print("Error: Datos del usuario no válidos.");
+        return;
+      }
+
+      String userName = userData['name'] ?? 'Usuario desconocido';
+      String userPhotoURL = userData['photoURL'] ?? '';
+
+      if (userPhotoURL.isEmpty &&
+          FirebaseAuth.instance.currentUser?.photoURL != null) {
+        userPhotoURL = FirebaseAuth.instance.currentUser!.photoURL!;
+
+        await FirebaseFirestore.instance.collection('user').doc(userId).update({
+          'photoURL': userPhotoURL,
+        });
+        print("photoURL actualizado en Firestore.");
+      }
+
+      DocumentReference likeRef = FirebaseFirestore.instance
+          .collection('likes')
+          .doc(widget.recipe.recipeId)
+          .collection('users')
+          .doc(userId);
+
+      DocumentSnapshot doc = await likeRef.get();
+
+      if (doc.exists) {
+        await likeRef.delete();
+        print("Like eliminado.");
+      } else {
+        await likeRef.set({
+          'liked': true,
+          'timestamp': FieldValue.serverTimestamp(),
+          'name': userName,
+          'photoURL': userPhotoURL,
+        });
+        print("Like guardado con nombre: $userName y foto: $userPhotoURL.");
+      }
+
+      _checkUserLike();
+    } catch (e) {
+      print("Error en _toggleLike(): $e");
+    }
+  }
+
+  void _showLikesDialog() async {
+    List<Map<String, dynamic>> users = [];
+
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('likes')
+          .doc(widget.recipe.recipeId)
+          .collection('users')
+          .get();
+
+      for (var doc in snapshot.docs) {
+        var userDoc = await FirebaseFirestore.instance
+            .collection('user')
+            .doc(doc.id)
+            .get();
+
+        if (userDoc.exists) {
+          users.add({
+            'name': userDoc['name'] ?? 'Usuario desconocido',
+            'photoURL': userDoc['photoURL'] ?? '',
+          });
+        }
+      }
+    } catch (e) {
+      print("Error al obtener la lista de likes: $e");
+    }
+
     showDialog(
       context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.black54,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            InteractiveViewer(
-              panEnabled: true,
-              boundaryMargin: const EdgeInsets.all(20),
-              minScale: 0.5,
-              maxScale: 3.0,
-              child: CachedNetworkImage(
-                imageUrl: widget.recipe.imageUrl,
-                fit: BoxFit.contain,
-                placeholder: (context, url) =>
-                    const Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => const Center(
-                  child:
-                      Icon(Icons.broken_image, size: 150, color: Colors.grey),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 20,
-              right: 20,
-              child: IconButton(
-                icon: const Icon(Icons.close, color: Colors.white, size: 30),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ),
-          ],
+      builder: (context) => AlertDialog(
+        title: const Text(
+          "Usuarios que le gustan",
+          style: TextStyle(fontSize: 22, fontFamily: 'Montserrat'),
         ),
+        content: users.isNotEmpty
+            ? SizedBox(
+                width: double.maxFinite,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: users[index]['photoURL'].isNotEmpty
+                            ? NetworkImage(users[index]['photoURL'])
+                            : null,
+                        child: users[index]['photoURL'].isEmpty
+                            ? const Icon(Icons.person)
+                            : null,
+                      ),
+                      title: Text(users[index]['name']),
+                    );
+                  },
+                ),
+              )
+            : const Text("Nadie ha dado like todavía."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("Cerrar"),
+          ),
+        ],
       ),
     );
+  }
+
+  String _formatLikes(int likes) {
+    if (likes >= 1000000) {
+      return "${(likes / 1000000).toStringAsFixed(1)}M ";
+    } else if (likes >= 1000) {
+      return "${(likes / 1000).toStringAsFixed(1)}K ";
+    } else {
+      return "$likes ";
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserLike();
   }
 
   @override
@@ -136,6 +256,7 @@ class _RecipeCardState extends State<RecipeCard> {
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      fontFamily: 'Montserrat',
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -161,20 +282,34 @@ class _RecipeCardState extends State<RecipeCard> {
                       },
                     ),
                     IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
                       icon: Icon(
                         widget.recipe.liked
                             ? Icons.thumb_up
                             : Icons.thumb_up_alt_outlined,
                         color: widget.recipe.liked ? Colors.blue : Colors.grey,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          widget.recipe.liked = !widget.recipe.liked;
-                        });
-                        _updateLike(widget.recipe.liked);
-                      },
+                      onPressed: _toggleLike,
+                    ),
+                    GestureDetector(
+                      onTap: _showLikesDialog,
+                      child: StreamBuilder<int>(
+                        stream: _getLikeCount(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Text("...");
+                          }
+                          String likeText = _formatLikes(snapshot.data ?? 0);
+                          return Text(
+                            likeText,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                              decoration: TextDecoration.underline,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -187,12 +322,56 @@ class _RecipeCardState extends State<RecipeCard> {
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
+                  fontFamily: 'Montserrat',
                 ),
               ),
             ),
             const SizedBox(height: 8),
             GestureDetector(
-              onTap: _showFullImage,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      backgroundColor: Colors.transparent,
+                      child: Stack(
+                        children: [
+                          InteractiveViewer(
+                            panEnabled: true,
+                            boundaryMargin: EdgeInsets.all(8),
+                            minScale: 0.5,
+                            maxScale: 3.0,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: CachedNetworkImage(
+                                imageUrl: widget.recipe.imageUrl,
+                                fit: BoxFit.contain,
+                                placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator()),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(
+                                  Icons.broken_image,
+                                  size: 150,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 10,
+                            right: 10,
+                            child: IconButton(
+                              icon: const Icon(Icons.close,
+                                  color: Colors.white, size: 30),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: CachedNetworkImage(
@@ -202,9 +381,10 @@ class _RecipeCardState extends State<RecipeCard> {
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
                       const Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) => const Center(
-                    child:
-                        Icon(Icons.broken_image, size: 150, color: Colors.grey),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.broken_image,
+                    size: 150,
+                    color: Colors.grey,
                   ),
                 ),
               ),
@@ -217,6 +397,7 @@ class _RecipeCardState extends State<RecipeCard> {
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[700],
+                  fontFamily: 'Montserrat',
                 ),
               ),
             ),
@@ -240,7 +421,7 @@ class _RecipeCardState extends State<RecipeCard> {
                 style: TextStyle(
                   color: Colors.blue,
                   fontSize: 16,
-                  fontFamily: "monserrat",
+                  fontFamily: "Montserrat",
                 ),
               ),
             ),

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:flutter/services.dart'; // Necesario para leer archivos desde assets
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,21 +7,24 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:thecook/authentication/screen/login_screen.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Mensaje en segundo plano: ${message.messageId}");
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
-
-  final String filePath = 'assets/services_account_file.json';
 
   try {
-    final String jsonString = File(filePath).readAsStringSync();
+    final String jsonString =
+        await rootBundle.loadString('assets/services_account_file.json');
     final Map<String, dynamic> jsonData = jsonDecode(jsonString);
     print('Archivo JSON cargado con éxito: $jsonData');
   } catch (e) {
-    print('Error al leer el archivo: $e');
+    print('Error al leer el archivo JSON: $e');
   }
 
+  // Configurar Firebase Messaging
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   NotificationSettings settings = await messaging.requestPermission();
 
@@ -30,22 +33,29 @@ Future<void> main() async {
   } else {
     print("Permiso de notificación no autorizado");
   }
+
+  // Manejo de mensajes en segundo plano
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  await updateFCMToken();
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // Este widget es la raíz de tu aplicación.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Recetas de Cocina',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: const LoginScreen());
+      debugShowCheckedModeBanner: false,
+      title: 'Recetas de Cocina',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const LoginScreen(),
+    );
   }
 }
 
@@ -54,9 +64,10 @@ Future<void> updateFCMToken() async {
   if (user != null) {
     String? fcmToken = await FirebaseMessaging.instance.getToken();
     if (fcmToken != null) {
-      await FirebaseFirestore.instance.collection('user').doc(user.uid).update({
-        'fcmToken': fcmToken,
-      });
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
+        {'fcmToken': fcmToken},
+        SetOptions(merge: true),
+      );
       print('FCM Token actualizado con éxito');
     }
   }
