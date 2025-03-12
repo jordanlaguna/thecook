@@ -31,7 +31,7 @@ class UserModel {
       uid: map['uid'] ?? '',
       name: map['name'] ?? '',
       email: map['email'] ?? '',
-      password: map['password'], // Puede ser null
+      password: map['password'],
     );
   }
 }

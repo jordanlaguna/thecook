@@ -32,8 +32,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-
-# Symbolication related
+.assets/services_account_file.json/# Symbolication related
 app.*.symbols
 
 # Obfuscation related

@@ -19,7 +19,7 @@ Future<void> main() async {
     final String jsonString =
         await rootBundle.loadString('assets/services_account_file.json');
     final Map<String, dynamic> jsonData = jsonDecode(jsonString);
-    print('Archivo JSON cargado con éxito: $jsonData');
+    print(jsonData);
   } catch (e) {
     print('Error al leer el archivo JSON: $e');
   }
@@ -64,7 +64,7 @@ Future<void> updateFCMToken() async {
   if (user != null) {
     String? fcmToken = await FirebaseMessaging.instance.getToken();
     if (fcmToken != null) {
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
+      await FirebaseFirestore.instance.collection('user').doc(user.uid).set(
         {'fcmToken': fcmToken},
         SetOptions(merge: true),
       );
